@@ -12,7 +12,7 @@ from ..toollib.logger import Logger
 from ..toollib.answer import _get_answers
 
 
-def _get_driver() -> webdriver.PhantomJS:
+def _get_driver():
     driver = webdriver.PhantomJS(desired_capabilities=_set_driver_ua())
     Logger.info('Initialize PhantomJS Webdriver')
     _set_cookies(driver, my_session().cookies)
@@ -22,23 +22,23 @@ def _get_driver() -> webdriver.PhantomJS:
     return driver
 
 
-def _set_driver_ua() -> dict:
+def _set_driver_ua():
     dcap = dict(DesiredCapabilities.PHANTOMJS)
     dcap["phantomjs.page.settings.userAgent"] = (_get_user_agent())
     return dcap
 
 
-def _set_cookies(driver: webdriver.PhantomJS, cookies):
+def _set_cookies(driver, cookies):
     for c in cookies:
         driver.add_cookie({'name': c.name, 'value': c.value, 'path': c.path, 'expiry': c.expires, 'domain': c.domain})
 
 
-def _set_driver_window_size(driver: webdriver.PhantomJS):
+def _set_driver_window_size(driver):
     driver.set_window_position(0, 0)
     driver.set_window_size(1920, 1080)
 
 
-def _open_question_description(driver: webdriver.PhantomJS):
+def _open_question_description(driver):
     els = driver.find_elements_by_xpath(
         '//button[@type="button"][@class="Button QuestionRichText-more Button--plain"]')
     # if element not exist, find_elements is fast than find_element
@@ -48,7 +48,7 @@ def _open_question_description(driver: webdriver.PhantomJS):
         Logger.info('Click Load More, Wait...')
 
 
-def _open_load_more(driver: webdriver.PhantomJS, recur_depth=0, max_depth=3):
+def _open_load_more(driver, recur_depth=0, max_depth=3):
     recur_depth = recur_depth
     if recur_depth > max_depth:
         return
@@ -61,11 +61,11 @@ def _open_load_more(driver: webdriver.PhantomJS, recur_depth=0, max_depth=3):
         return _open_load_more(driver, recur_depth + 1)
 
 
-def _get_question_h4_answer_count(driver: webdriver.PhantomJS) -> int:
+def _get_question_h4_answer_count(driver):
     return int(driver.find_element_by_class_name('List-headerText').text.split(' ')[0])
 
 
-def _open_question_load_more(driver: webdriver.PhantomJS, recur_depth=1, max_depth=10):
+def _open_question_load_more(driver, recur_depth=1, max_depth=10):
     answer_count = len(_get_answers(_to_bs(driver.page_source)))
     recur_depth = recur_depth
     if recur_depth > max_depth:
