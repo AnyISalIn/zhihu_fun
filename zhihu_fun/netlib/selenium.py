@@ -66,12 +66,15 @@ def _get_question_h4_answer_count(driver: webdriver.PhantomJS) -> int:
 
 
 def _open_question_load_more(driver: webdriver.PhantomJS, recur_depth=1, max_depth=10):
+    answer_count = len(_get_answers(_to_bs(driver.page_source)))
     recur_depth = recur_depth
     if recur_depth > max_depth:
         return
     try:
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_all_elements_located((By.XPATH, '//button[@class="Button QuestionMainAction"]')))
+        title_count = _get_question_h4_answer_count(driver)
+        if title_count > 20 and answer_count < title_count:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, '//button[@class="Button QuestionMainAction"]')))
     except TimeoutException:
         Logger.error('Question {} Load More Timeout'.format(driver.current_url))
     els = driver.find_elements_by_xpath('//button[@class="Button QuestionMainAction"]')
@@ -81,5 +84,5 @@ def _open_question_load_more(driver: webdriver.PhantomJS, recur_depth=1, max_dep
         Logger.info('Click Load More, Wait...')
         sleep(1)
         return _open_question_load_more(driver, recur_depth + 1)
-    Logger.info('Summary: Question {} Answer Count {}'.format(driver.current_url,
-                                                              len(_get_answers(_to_bs(driver.page_source)))))
+    answer_count = len(_get_answers(_to_bs(driver.page_source)))
+    Logger.info('Summary: Question {} Answer Count {}'.format(driver.current_url, answer_count))
