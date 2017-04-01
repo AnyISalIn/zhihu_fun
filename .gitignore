@@ -87,3 +87,9 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# custom
+data/*
+result.json
+.DS_Store
+.idea
