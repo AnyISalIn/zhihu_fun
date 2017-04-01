@@ -1,4 +1,3 @@
-from bs4 import BeautifulSoup
 from .logger import Logger
 from ..netlib.requests import _get_image
 from ..config import config
@@ -8,36 +7,36 @@ basedir = os.path.abspath(os.path.dirname(__name__))
 vote_up = config.get('vote_up')
 
 
-def _get_author_info(bs_obj: BeautifulSoup) -> BeautifulSoup:
+def _get_author_info(bs_obj):
     ret = bs_obj.find('div', {'class': 'AuthorInfo'}).find_all('a')
     if ret:
         return ret[-1]
     return '匿名用户'
 
 
-def _get_author_name(bs_obj: BeautifulSoup) -> str:
+def _get_author_name(bs_obj):
     ret = _get_author_info(bs_obj)
     if ret == '匿名用户':
         return '匿名用户'
     return ret.text
 
 
-def _get_author_url(bs_obj: BeautifulSoup) -> str:
+def _get_author_url(bs_obj):
     ret = _get_author_info(bs_obj)
     if ret == '匿名用户':
         return ''
     return ret.get('href')
 
 
-def _get_attr(bs_obj: BeautifulSoup) -> tuple:
+def _get_attr(bs_obj):
     return _get_author_name(bs_obj), _get_author_url(bs_obj), _get_vote(bs_obj)
 
 
-def _get_vote(bs_obj: BeautifulSoup) -> int:
+def _get_vote(bs_obj):
     return int(bs_obj.find('button', {'class': 'VoteButton--up'}).text)
 
 
-def _get_images(answer: BeautifulSoup) -> list:
+def _get_images(answer):
     noscripts = answer.find_all('noscript')
     if noscripts:
         images = [text.strip('src=').strip('"') for item in noscripts for text in item.text.split(' ') if 'src' in text]
@@ -45,7 +44,7 @@ def _get_images(answer: BeautifulSoup) -> list:
     return noscripts
 
 
-def _get_answers(bs_obj: BeautifulSoup) -> list:
+def _get_answers(bs_obj):
     ret = []
     for item in bs_obj.find_all('div', {'class': 'List-item'}):
         if len(item.attrs.get('class')) == 1:
@@ -53,7 +52,7 @@ def _get_answers(bs_obj: BeautifulSoup) -> list:
     return ret
 
 
-def _filter_answer(bs_obj: BeautifulSoup) -> str:
+def _filter_answer(bs_obj):
     if _get_vote(bs_obj) < vote_up:
         return
     images = _get_images(bs_obj)
@@ -62,7 +61,7 @@ def _filter_answer(bs_obj: BeautifulSoup) -> str:
     return images
 
 
-def _parse_answers(answers: list, title: str):
+def _parse_answers(answers, title):
     for answer in answers:
         images = _filter_answer(answer)
         author_name, author_url, vote = _get_attr(answer)

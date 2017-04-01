@@ -1,7 +1,8 @@
-from zhihu_fun.go import UrlGenerator, QuestionParser
+from zhihu_fun.go import UrlGenerator, QuestionParser, basedir
 from zhihu_fun.toollib.logger import Logger
 from multiprocessing import Queue, Process
 import json
+import os
 
 
 def url_generator(q):
@@ -14,7 +15,7 @@ def url_generator(q):
     except Exception as e:
         g.driver.close()
         Logger.warning('Handle Exception {}'.format(e))
-    with open('result.json', 'w') as f:
+    with open(os.path.join(basedir, 'result.json'), 'w') as f:
         Logger.info('Summary: {} Record'.format(len(g.info)))
         Logger.info('Keyword Matched \n' + json.dumps(g.macthed_keys, indent=4, ensure_ascii=False))
         json.dump(g.info, f, indent=4, ensure_ascii=False)

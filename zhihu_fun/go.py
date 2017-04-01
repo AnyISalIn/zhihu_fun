@@ -12,7 +12,7 @@ from .toollib.bs import _to_bs
 from .toollib.logger import Logger
 from .toollib.question import _get_questions, _get_question_url, _filter_question, _get_question_title
 from .toollib.dec import time_dec
-from .toollib.answer import _parse_answers, _get_answers
+from .toollib.answer import _parse_answers, _get_answers, basedir
 
 session = my_session()
 session.headers = _get_headers()
@@ -20,7 +20,7 @@ ROOTURL = config.get('root_url')
 
 
 class UrlGenerator(object):
-    def __init__(self, q: Queue, keyword_number: int = 1):
+    def __init__(self, q, keyword_number=1):
         self.driver = _get_driver()
         self._start_url = config.get('start_url') or ROOTURL
         self._first_page = _to_bs(self._get_page(self._start_url))
@@ -40,7 +40,7 @@ class UrlGenerator(object):
         return self.driver.page_source
 
     @time_dec
-    def _generate_url(self, bs_obj: BeautifulSoup):
+    def _generate_url(self, bs_obj):
         for item in _get_questions(bs_obj):
             url = _get_question_url(item)
             title = _get_question_title(item)
@@ -69,7 +69,7 @@ class UrlGenerator(object):
                 self.urls.extend(config.get('custom_urls'))
                 Logger.info('Extend Custom URLs')
             else:
-                Logger.info('No Custom URLs')
+                Logger.warning('No Custom URLs')
             Logger.info('First Page, Start URL {}'.format(self._start_url))
             self._generate_url(self._first_page)
             Logger.info('First Page Finished')
@@ -95,11 +95,11 @@ class UrlGenerator(object):
 
 
 class QuestionParser(object):
-    def __init__(self, q: Queue):
+    def __init__(self, q):
         self.driver = _get_driver()
         self.q = q
 
-    def _get_page(self, url: str):
+    def _get_page(self, url):
         self.driver.get(url)
         _open_question_load_more(self.driver)
         return self.driver.page_source
