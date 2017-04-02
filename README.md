@@ -95,5 +95,5 @@ config = {
     'blacklist': ['男生', '男性', '伪娘', '男友', '男人', '男朋友'], # 黑名单，如果问题标题匹配到黑名单中的词，则直接不匹配
     'key_number': 2,
     'vote_up': 10,  # 根据答案的赞同数来判定是否爬取图片
-    'url_generate_time': 30  # 设置 url generate 运行的时间
+    'url_generate_time': 30  # 设置 url generate 运行的时间, 设置为 None 代表一直跑下去, 不能为 '', ""
 ```
