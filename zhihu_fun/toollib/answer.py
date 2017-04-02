@@ -1,9 +1,7 @@
-from .logger import Logger
-from ..netlib.requests import _get_image
+from ..toollib.bs import _to_bs
 from ..config import config
 import os
 
-basedir = os.path.abspath(os.path.dirname(__name__))
 vote_up = config.get('vote_up')
 
 
@@ -39,7 +37,12 @@ def _get_vote(bs_obj):
 def _get_images(answer):
     noscripts = answer.find_all('noscript')
     if noscripts:
-        images = [text.strip('src=').strip('"') for item in noscripts for text in item.text.split(' ') if 'src' in text]
+        images = []
+        for item in noscripts:
+            bs_obj = _to_bs('<' + item.text.strip('&gt;').strip('lt;') + '/>')  # convert noscripts element to img
+            src, width, height = bs_obj.img.attrs.get('src'), bs_obj.img.attrs.get(
+                'data-rawwidth'), bs_obj.img.attrs.get('data-rawheight')
+            images.append((src, width, height))
         return images
     return noscripts
 
@@ -59,19 +62,3 @@ def _filter_answer(bs_obj):
     if not images:
         return
     return images
-
-
-def _parse_answers(answers, title):
-    for answer in answers:
-        images = _filter_answer(answer)
-        author_name, author_url, vote = _get_attr(answer)
-        if images:
-            for image in images:
-                path = os.path.join(basedir, 'data', title, author_name + '_赞同_{}'.format(vote))
-                path.replace(' ', '')
-                if not os.path.isdir(path):
-                    os.makedirs(path)
-                    Logger.info('{} Not Exists, Created'.format(path))
-                image_path = os.path.join(path, image.split('/')[-1])
-                _get_image(image, image_path)
-                Logger.info('Download Image to {}'.format(image_path))
