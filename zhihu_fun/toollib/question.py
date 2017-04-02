@@ -17,9 +17,9 @@ def _get_question_title(bs_obj):
     if bs_obj.get('href'):
         ret = bs_obj.text.replace('\n', '')
         if [s for s in ret.split('- ', -1) if '的回答' in s]:
-            return ret.split('- ')[0]
-        return ret
-    return bs_obj.find('h1', {'class': 'QuestionHeader-title'}).text
+            return ret.split('- ')[0].replace('?', '？')  # replace ? to ？
+        return ret.replace('?', '？')
+    return bs_obj.find('h1', {'class': 'QuestionHeader-title'}).text.replace('?', '？')
 
 
 def _filter_question(bs_obj, keyword_number=1):
