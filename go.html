@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="App">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>知乎图片库</title>
+    <base href="http://localhost:8000">
+    <link rel="stylesheet" href="/zhihu_fun/frontend/lightbox.css" type="text/css" media="all"/>
+    <script charset="utf-8">
+        angular.module('App', [])
+
+                .controller('ImageLayout', ImageLayout)
+        function ImageLayout($scope, $http) {
+            $http.get('/image_meta.json').success(function (imgs) {
+                $scope.imgs = imgs
+            })
+        }
+    </script>
+    <style type="text/css" media="screen">
+        section {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        section::after {
+            content: '';
+            flex-grow: 999999999;
+        }
+
+        div {
+            margin: 2px;
+            background-color: #20e0ee;
+            position: relative;
+        }
+
+        div.lightbox {
+            background-color: initial;
+        }
+
+        div.lb-dataContainer {
+            background-color: initial;
+        }
+
+        div.lb-data {
+            background-color: initial;
+        }
+
+        div.lb-details {
+            background-color: initial;
+        }
+
+        i {
+            display: block;
+        }
+
+        img {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            vertical-align: bottom;
+        }
+    </style>
+</head>
+<body ng-controller="ImageLayout">
+<section>
+    <div ng-repeat="img in imgs" style="width:{{img.width*200/img.height}}px;flex-grow:{{img.width*200/img.height}}">
+        <i style="padding-bottom:{{img.height/img.width*100}}%"></i>
+        <a class="example-image-link" href="{{img.src}}" data-lightbox="example-1">
+            <img src="{{img.src}}" alt="{{img.vote}}">
+        </a>
+    </div>
+</section>
+<script src="/zhihu_fun/frontend/lightbox-plus-jquery.js"></script>
+</body>
+</html>

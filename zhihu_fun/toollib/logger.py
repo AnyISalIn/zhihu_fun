@@ -14,7 +14,7 @@ def get_logger(level):
     elif log_level == 'info':
         level = logging.INFO
     else:
-        level = logging.WARN
+        level = logging.WARNING
     Logger.setLevel(level)
     return Logger
 

@@ -18,5 +18,7 @@ config = {
                 '穿', '俗气', '风格', '眼睛', '锻炼',
                 '感觉', '感受', '长的', '大学生'],
     'blacklist': ['男生', '男性', '伪娘', '男友', '男人', '男朋友'],
-    'vote_up': 10
+    'key_number': 2,
+    'vote_up': 10,
+    'url_generate_time': 30  # second
 }
