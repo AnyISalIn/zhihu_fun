@@ -40,7 +40,7 @@ def _get_images(answer):
         images = []
         for item in noscripts:
             bs_obj = _to_bs('<' + item.text.strip('&gt;').strip('lt;') + '/>')  # convert noscripts element to img
-            src, width, height = bs_obj.img.attrs.get('src'), bs_obj.img.attrs.get(
+            src, width, height = bs_obj.img.attrs.get('src').replace('_b', ''), bs_obj.img.attrs.get(
                 'data-rawwidth'), bs_obj.img.attrs.get('data-rawheight')
             images.append((src, width, height))
         return images
