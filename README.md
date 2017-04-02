@@ -27,6 +27,10 @@ $ ln -sv /opt/phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/bin/ # 确保 phan
 
 ### 配置 Nginx
 
+为什么要使用 `Nginx`, 其实也可以不用，原因请看这个 `issue`
+
+[readme 对小白如我不太友好 #5](https://github.com/AnyISalIn/zhihu_fun/issues/5)
+
 ```shell
 # 确保 autoindex 和 charset 被正确配置
 server {
@@ -50,6 +54,11 @@ server {
     }
 ```
 
+### 获取 Cookie
+
+正常登陆 zhihu, 通过浏览器开发者工具中的 `network` 选项，获取 `Cookie`
+
+![get_cookie](demo/get_cookie.png)
 ### 配置运行 zhihu_fun
 
 ```shell
