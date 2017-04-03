@@ -1,4 +1,3 @@
-from collections import deque
 from queue import Queue
 from random import randint
 from time import time
@@ -27,7 +26,7 @@ class UrlGenerator(object):
         self._start_url = config.get('start_url') or ROOTURL
         self._first_page = _to_bs(self._get_page(self._start_url))
         self._urls = set()
-        self.urls = deque()
+        self.urls = []
         self.info = []
         self.keyword_number = keyword_number
         self.macthed_keys = {}
@@ -82,8 +81,9 @@ class UrlGenerator(object):
                     Logger.info('Total Second {}, Stopping app...'.format(total_second))
                     break
             try:
-                index = randint(0, len(self.urls) - 1)  # generate deque random index
+                index = randint(0, len(self.urls) - 1)  # generate url from random index
                 url = self.urls[index]
+                self.urls.pop(index)
                 Logger.info('Access URL {}'.format(url))
             except IndexError:
                 Logger.info('Finished, No More Resource')
