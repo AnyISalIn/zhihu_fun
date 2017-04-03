@@ -1,5 +1,4 @@
 from collections import deque
-from json import JSONDecodeError
 from queue import Queue
 from random import randint
 from time import time
@@ -122,7 +121,7 @@ class QuestionParser(object):
                     with open(meta_file, 'r') as json_file:
                         try:
                             entrys = json.load(json_file)  # append to json file, if Exception, return []
-                        except JSONDecodeError:
+                        except ValueError:
                             entrys = []
                     with open(meta_file, 'w') as json_file:
                         entrys.extend(result)
