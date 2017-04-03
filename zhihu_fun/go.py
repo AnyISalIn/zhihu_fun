@@ -80,17 +80,15 @@ class UrlGenerator(object):
                 if total_second > second:
                     Logger.info('Total Second {}, Stopping app...'.format(total_second))
                     break
-            try:
-                index = randint(0, len(self.urls) - 1)  # generate url from random index
-                url = self.urls[index]
-                self.urls.pop(index)
-                Logger.info('Access URL {}'.format(url))
-            except IndexError:
+            if not self.urls:
                 Logger.info('Finished, No More Resource')
                 break
-            else:
-                bs_obj = _to_bs(self._get_page(url))
-                self._generate_url(bs_obj)
+            index = randint(0, len(self.urls) - 1)  # generate url from random index
+            url = self.urls[index]
+            self.urls.pop(index)
+            Logger.info('Access URL {}'.format(url))
+            bs_obj = _to_bs(self._get_page(url))
+            self._generate_url(bs_obj)
 
     def run(self, second=None):
         self._run(second=second)
