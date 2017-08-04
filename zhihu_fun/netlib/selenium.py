@@ -62,7 +62,11 @@ def _open_load_more(driver, recur_depth=0, max_depth=3):
 
 
 def _get_question_h4_answer_count(driver):
-    return int(driver.find_element_by_class_name('List-headerText').text.split(' ')[0])
+    try:
+        return int(driver.find_element_by_class_name('List-headerText').text.split(' ')[0])
+    except Exception as e:
+        Logger.warning('Get Answer Count Error {}'.format(str(e)))
+        return 0
 
 
 def _open_question_load_more(driver, recur_depth=1, max_depth=10):
