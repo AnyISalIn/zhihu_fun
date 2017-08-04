@@ -31,7 +31,12 @@ def _get_attr(bs_obj):
 
 
 def _get_vote(bs_obj):
-    return int(bs_obj.find('button', {'class': 'VoteButton--up'}).text)
+    vote = bs_obj.find('button', {'class': 'VoteButton--up'}).text
+    if vote.isdigit():
+        return int(bs_obj.find('button', {'class': 'VoteButton--up'}).text)
+    if 'K' in vote:
+        return int(float(vote.strip('K'))) * 1000
+    return 0
 
 
 def _get_images(answer):
