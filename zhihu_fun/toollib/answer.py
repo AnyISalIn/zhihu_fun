@@ -35,7 +35,7 @@ def _get_vote(bs_obj):
     if vote.isdigit():
         return int(bs_obj.find('button', {'class': 'VoteButton--up'}).text)
     if 'K' in vote:
-        return int(float(vote.strip('K'))) * 1000
+        return int(float(vote.strip('K')) * 1000)
     return 0
 
 
